@@ -1,4 +1,4 @@
-# CS-GY-6083 project FatEar
+# CS-GY 6083 project FatEar
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
