@@ -25,12 +25,28 @@ Built Using Languages and Libraries Listed Below
 git clone https://github.com/sileyouhe/CS-GY-6083-project-FatEar.git
 ```
 2. Installing Python Packages From a Requirements File
-```sh
+```python
 pip install -r requirements.txt 
 ```
-3. Run using command:
-```Python
+3. Import database from fatear.sql:
+
+4. Run flask app using command:
+```shell
 flask run
+```
+
+### Database Configuration
+```python
+# config.py
+SECRET_KEY = "secret key"
+HOST = 'localhost'
+PORT = 3306
+USERNAME = "root"
+PASSWORD = "root"
+DBNAME = 'fatear'
+CHARSET = 'utf8mb4'
+CURSORCLASS = pymysql.cursors.DictCursor
+
 ```
 
 <!-- Authors -->
