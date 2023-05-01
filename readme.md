@@ -22,7 +22,7 @@ Built Using Languages and Libraries Listed Below
 
 1. Clone the repository
 ```sh
-git clone https://github.com/decipher07/Chicken-Swarm-Optimization.git
+git clone https://github.com/sileyouhe/CS-GY-6083-project-FatEar.git
 ```
 2. Installing Python Packages From a Requirements File
 ```sh
