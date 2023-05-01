@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>All my followers:</h2>
+    <table>
+        <tr>
+            <th>User Name</th>
+            <th>User First Name</th>
+            <th>User Last Name</th>
+        </tr>
+        {% for line in result.follower %}
+            <tr>
+                 <td><a href="{{url_for('user_bp.get_user_detail', username = line.follower)}}">{{line.follower}}</a></td>
+{#                 <td>{{ line.follower }}</td>#}
+                <td>{{ line.fname }}</td>
+                <td>{{ line.lname }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>All my following:</h2>
+    <table>
+        <tr>
+            <th>User Name</th>
+            <th>User First Name</th>
+            <th>User Last Name</th>
+        </tr>
+        {% for line in result.follows %}
+            <tr>
+                <td><a href="{{url_for('user_bp.get_user_detail', username = line.follows)}}">{{line.follows}}</a></td>
+{#                <td>{{ line.follows }}</td>#}
+                <td>{{ line.fname }}</td>
+                <td>{{ line.lname }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</html>

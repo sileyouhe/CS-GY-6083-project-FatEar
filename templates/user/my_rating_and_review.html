@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>All my ratings:</h2>
+    <table>
+        <tr>
+            <th>title</th>
+            <th>Release Date</th>
+            <th>stars</th>
+            <th>Rating Date</th>
+        </tr>
+        {% for line in result.ratings %}
+            <tr>
+{#                <td>{{ line.user }}</td>#}
+                <td><a href="{{url_for('song_bp.get_song_detail', songID = line.songID)}}">{{line.title}}</a></td>
+                <td>{{line.releaseDate}}</td>
+                <td>{{line.stars}}</td>
+                <td>{{line.ratingDate}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>All my reviews:</h2>
+    <table>
+        <tr>
+            <th>title</th>
+            <th>Release Date</th>
+            <th>Review Text</th>
+            <th>Review Date</th>
+        </tr>
+        {% for line in result.reviews %}
+            <tr>
+{#                <td>{{ line.user }}</td>#}
+                <td><a href="{{url_for('song_bp.get_song_detail', songID = line.songID)}}">{{line.title}}</a></td>
+                <td>{{line.releaseDate}}</td>
+                <td>{{line.reviewText}}</td>
+                <td>{{line.reviewDate}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>Artist details:</h2>
+
+<table>
+    <tr>
+        <th>Artist First Name</th>
+        <td>{{artist_detail.fname}}</td>
+    </tr>
+    <tr>
+        <th>Artist Last Name</th>
+        <td>{{artist_detail.lname}}</td>
+    </tr>
+    <tr>
+        <th>Artist Bio</th>
+        <td>{{artist_detail.artistBio}}</td>
+    </tr>
+    <tr>
+        <th>Artist URL</th>
+        <td>{{artist_detail.artistURL}}</td>
+    </tr>
+
+    {% if user %}
+    <tr>
+        <th>Fan Status</th>
+        <td>{{ user.fan_status }}</td>
+    </tr>
+    {% endif %}
+</table>
+<br>
+    {% if user %}
+{% if user.fan_status == False %}
+    <form action="/fanRequest" method="POST">
+        Become a fan of this artist:
+        <input type="hidden" name="sender" value ="{{ user.username }}" />
+        <input type="hidden" name="artistID" value="{{ artist_detail.artistID }}"/>
+        <input type="submit" value= "become a fan" />
+    </form>
+    {% else %}
+    <form action="/cancelFanRequest" method="POST">
+        Not a fan anymore:
+        <input type="hidden" name="sender" value ="{{ user.username }}" />
+        <input type="hidden" name="artistID" value="{{ artist_detail.artistID }}"/>
+        <input type="submit" value= "Not a fan anymore" />
+    </form>
+{% endif %}
+{% endif %}
+
+<br>
+<h2>All the songs this artist performs:</h2>
+<table>
+  <tr>
+    <th>Song title</th>
+    <th>Release Date</th>
+    <th>Song URL</th>
+  </tr>
+    {% for line in artist_detail.perform %}
+        <tr>
+            <td><a href="{{url_for('song_bp.get_song_detail', songID = line.songID)}}">{{line.title}}</a></td>
+            <td>{{ line.releaseDate }}</td>
+            <td>{{ line.songURL }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</html>

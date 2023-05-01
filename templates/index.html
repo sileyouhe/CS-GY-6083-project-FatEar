@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    {% if not user %}
+    <a href="/login">Login</a>
+    <br>
+    <a href="/register">Register</a>
+    <br>
+    {% else %}
+    <h3>User Profile:  {{ user.username }}</h3>
+    <table>
+    <tr>
+        <th>First Name</th>
+        <td>{{user.fname}}</td>
+    </tr>
+    <tr>
+        <th>Last Name</th>
+        <td>{{user.lname}}</td>
+    </tr>
+    <tr>
+        <th>Last Login</th>
+        <td>{{user.lastlogin}}</td>
+    </tr>
+    <tr>
+        <th>Nickname</th>
+        <td>{{user.nickname}}</td>
+    </tr>
+
+    </table>
+    <br>
+        <a href= {{ url_for("user_bp.get_friend", username = user.username) }} >My friends</a>
+        <br>
+        <a href= {{ url_for("user_bp.get_follow", username = user.username) }}>My follows and followers</a>
+        <br>
+        <a href= {{ url_for("user_bp.get_artist", username = user.username) }}>My Artists</a>
+        <br>
+        <a href= {{ url_for("user_bp.get_rating_and_review", username = user.username) }}>My Ratings and Reviews</a>
+        <br>
+        <a href= {{ url_for("user_bp.get_new_item", username = user.username, lastlogin = user.lastlogin) }}>New items of interest</a>
+        <br>
+        <a href="/logout">Logout</a>
+    <br>
+
+{% endif %}
+<br>
+<form action="/searchGroup" method="POST">
+    Search for songs
+{#    titles, artists, albums:#}
+    <br>
+{#    <input type="text" name="keyword" placeholder="titles, artists, albums">#}
+{#    <br>#}
+    genre:
+    <br>
+    <select name="genre">
+        <option value = "All">All</option>
+        {% if genres %}
+            {% for line in genres %}
+            <option value = {{ line.genre }}>{{ line.genre }}</option>
+            {% endfor %}
+        {% endif %}
+    </select>
+    <br>
+    average rating above(0-5):
+    <br>
+    <input type="number" name="rating" step="any" min="0" max="5">
+    <br>
+    Artist First Name:
+    <br>
+    <input type="text" name="artist_first_name" placeholder="artist_first_name">
+    <br>
+    Artist Last Name:
+    <br>
+    <input type="text" name="artist_last_name" placeholder="artist_last_name">
+    <br>
+    <input type="submit" value=Search />
+</form>
+<br>
+<br>
+<form action="/searchUser" method="POST">
+    Search for users
+    <br>
+    <br>
+    Username:
+    <br>
+    <input type="text" name="username" placeholder="user_username">
+    <br>
+    User First Name:
+    <br>
+    <input type="text" name="user_first_name" placeholder="user_first_name">
+    <br>
+    User Last Name:
+    <br>
+    <input type="text" name="user_last_name" placeholder="user_last_name">
+    <br>
+    <input type="submit" value= Search />
+</form>
+<br>
+<br>
+<form action="/searchArtist" method="POST">
+    Search for Artist
+    <br>
+    <br>
+    Artist First Name:
+    <br>
+    <input type="text" name="artist_first_name" placeholder="artist_first_name">
+    <br>
+    Artist Last Name:
+    <br>
+    <input type="text" name="artist_last_name" placeholder="artist_last_name">
+    <br>
+    <input type="submit" value= Search />
+</form>
+</body>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+</html>

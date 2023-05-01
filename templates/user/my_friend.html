@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>Your friends:</h2>
+    <table>
+        <tr>
+            <th>User Name</th>
+        </tr>
+        {% for line in result.friends %}
+            <tr>
+                <td>{{ line.user }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Friend requests you have sent:</h2>
+    <table>
+        <tr>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>acceptStatus</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+        </tr>
+        {% for line in result.request_send %}
+            <tr>
+                <td>{{ line.user1 }}</td>
+                <td>{{ line.user2 }}</td>
+                <td>{{ line.acceptStatus }}</td>
+                <td>{{ line.createdAt }}</td>
+                <td>{{ line.updatedAt }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Friend requests you have received:</h2>
+    <table>
+        <tr>
+            <th>options</th>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>acceptStatus</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+        </tr>
+        {% for line in result.request_receive %}
+            <tr>
+                <td>
+                {% if line.acceptStatus == "pending" %}
+                        <a href="{{url_for('user_bp.accept_request', sender = line.user1, receiver = line.user2)}}">Accept</a>
+                        <a href="{{url_for('user_bp.reject_request', sender = line.user1, receiver = line.user2)}}">Reject</a>
+                {% endif %}
+                </td>
+                <td>{{ line.user1 }}</td>
+                <td>{{ line.user2 }}</td>
+                <td>{{ line.acceptStatus }}</td>
+                <td>{{ line.createdAt }}</td>
+                <td>{{ line.updatedAt }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</html>

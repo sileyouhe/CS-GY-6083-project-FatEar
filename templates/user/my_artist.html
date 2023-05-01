@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>All my artists:</h2>
+    <table>
+        <tr>
+            <th>Artist ID</th>
+            <th>Artist First Name</th>
+            <th>Artist Last Name</th>
+        </tr>
+        {% for line in result.artist %}
+            <tr>
+		        <td><a href="{{url_for('artist_bp.get_artist_detail', artistID = line.artistID)}}">{{line.artistID}}</a></td>
+                {#<td>{{ line.artistID }}</td>#}
+                <td>{{ line.fname }}</td>
+                <td>{{ line.lname }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+</html>

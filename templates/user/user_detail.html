@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <h2>user details:</h2>
+
+<table>
+    <tr>
+        <th>username</th>
+        <td>{{user_detail.username}}</td>
+    </tr>
+    <tr>
+        <th>User First Name</th>
+        <td>{{user_detail.fname}}</td>
+    </tr>
+    <tr>
+        <th>User Last Name</th>
+        <td>{{user_detail.lname}}</td>
+    </tr>
+
+
+
+    {% if user and user.username != user_detail.username %}
+        <tr>
+            <th>Friend Status</th>
+            <td>{{ user.friend_status }}</td>
+        </tr>
+        <tr>
+            <th>Follower</th>
+            <td>{{ user.follower_status }}</td>
+        </tr>
+        <tr>
+            <th>Follows</th>
+            <td>{{ user.follows_status }}</td>
+        </tr>
+
+</table>
+<br>
+{% if user.friend_status == False %}
+    <form action="/friendRequest" method="POST">
+        Send a friend request:
+        <input type="hidden" name="sender" value ="{{ user.username }}" />
+        <input type="hidden" name="receiver" value="{{ user_detail.username }}"/>
+        <input type="submit" value= request />
+    </form>
+    {% if request_info %}
+		<p class="request_info"> {{request_info}}</p>
+	{% endif %}
+{% endif %}
+{% if user.follows_status == False %}
+    <form action="/followRequest" method="POST">
+        Follow this user:
+        <input type="hidden" name="sender" value ="{{ user.username }}" />
+        <input type="hidden" name="receiver" value="{{ user_detail.username }}"/>
+        <input type="submit" value= follow />
+    </form>
+    {% else %}
+    <form action="/unfollowRequest" method="POST">
+        Unfollow this user:
+        <input type="hidden" name="sender" value ="{{ user.username }}" />
+        <input type="hidden" name="receiver" value="{{ user_detail.username }}"/>
+        <input type="submit" value= unfollow />
+    </form>
+{% endif %}
+{% endif %}
+
+{% if not user %}
+    <h3>Log in and follow this user or become a friend !</h3>
+{% endif %}
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+
+
+</html>

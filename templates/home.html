@@ -1,0 +1,43 @@
+<html>
+<head>
+</head>
+<body>
+<form action="/post" method="POST">
+	<h1>Welcome {{user.username}}</h1>
+    <h1>Hello {{user.fname}}  {{ user.lname }}</h1>
+    <h1>nickname {{user.nickname}} </h1>
+    <h1>Your last login in {{user.lastlogin}} </h1>
+	<input type="text" name = "blog" placeholder="post" required/> </br>
+	<input type="submit" value = Post />
+</form>
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+Here are your posts:
+
+<table>
+	<th>Time</th>
+	<th>Post</th>
+
+{% for line in posts %}
+	<tr>
+		<td>{{line.ts}}</td>
+		<td>{{line.blog_post}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+<a href="/select_blogger">Select a blogger</a>
+<br>
+<a href="/upload_form">Upload a photo</a>
+<br>
+<a href="/logout">Logout</a>
+
+</body>
+
+
+</html>

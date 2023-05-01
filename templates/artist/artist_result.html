@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <br>
+    Here are the search results
+<table >
+	<th>Artist ID</th>
+	<th>Artist First name</th>
+    <th>Artist Last name</th>
+    <th>Artist Bio</th>
+    <th>Artist URL</th>
+
+{% for line in result %}
+	<tr>
+		<td><a href="{{url_for('artist_bp.get_artist_detail', artistID = line.artistID)}}">{{line.artistID}}</a></td>
+		<td>{{line.fname if line.fname else ""}}</td>
+        <td>{{line.lname if line.lname else ""}}</td>
+        <td>{{line.artistBio if line.artistBio else ""}}</td>
+        <td>{{line.artistURL if line.artistURL else ""}}</td>
+	</tr>
+{% endfor %}
+</table>
+</body>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+</html>

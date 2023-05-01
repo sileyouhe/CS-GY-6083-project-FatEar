@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+<a href="/">Home</a>
+
+<h2>Song details:</h2>
+
+<table style="width:100%">
+    <tr>
+        <th>songID</th>
+        <td>{{song_detail.songID}}</td>
+    </tr>
+    <tr>
+        <th>title</th>
+        <td>{{song_detail.title}}</td>
+    </tr>
+    <tr>
+        <th>releaseDate</th>
+        <td>{{song_detail.releaseDate}}</td>
+    </tr>
+    <tr>
+        <th>songURL</th>
+        <td><a href = {{song_detail.songURL}}> {{song_detail.songURL}}</a></td>
+    </tr>
+    <tr>
+        <th>genre</th>
+        <td>{{song_detail.genre}}</td>
+    </tr>
+    <tr>
+        <th>average_rating</th>
+        <td>{{song_detail.avg_rating}}</td>
+    </tr>
+    <tr>
+        <th>Artist</th>
+        <td>{{song_detail.artist.artist}}</td>
+    </tr>
+    <tr>
+        <th>Album ID</th>
+        <td>{{song_detail.album.albumID}}</td>
+    </tr>
+    {% if user %}
+    <tr>
+        <th>Your rating</th>
+        <td>
+            {% if user.rating %}
+            {{user.rating.stars}}   (Rating Date: {{ user.rating.ratingDate }})
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Your review</th>
+        <td>
+            {% if user.review %}
+            {{user.review.reviewText}}   (Review Date: {{ user.review.reviewDate }})
+            {% endif %}
+        </td>
+    </tr>
+{#    {% for line in user.review %}#}
+{#        <tr>#}
+{#            <td>{{ line.reviewText }}(Review Date: {{ line.reviewDate }})</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+    {% endif %}
+</table>
+<br>
+{% if user %}
+    <form action="/rateSong" method="POST">
+        Rate this song:
+        <input type="number" name="rating" min="0" max="5" required>
+        <input type="hidden" name="username" value ="{{ user.username }}" />
+        <input type="hidden" name="songID" value="{{ song_detail.songID }}"/>
+        <input type="submit" value= submit />
+    </form>
+    <br>
+    <form action="/postReview" method="POST">
+        <label for="reviewText">Post a review:</label>
+        <textarea name="reviewText"
+          rows="5" cols="33" required></textarea>
+        <input type="hidden" name="username" value="{{ user.username }}" />
+        <input type="hidden" name="songID" value="{{ song_detail.songID }}" />
+        <input type="submit" value = submit />
+    </form>
+    {% else %}
+    <h3>Log in and rate this song or post a review !</h3>
+{% endif %}
+<h2>Song reviews:</h2>
+<table style="width:100%">
+  <tr>
+    <th>User Name</th>
+    <th>review Text</th>
+    <th>review Date</th>
+  </tr>
+    {% for line in song_detail.review %}
+        <tr>
+            <td>{{ line.username }}</td>
+            <td>{{ line.reviewText }}</td>
+            <td>{{ line.reviewDate }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+</style>
+
+</html>

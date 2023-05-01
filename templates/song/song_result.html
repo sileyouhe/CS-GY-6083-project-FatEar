@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <a href="/">Home</a>
+    <br>
+    Here are the results
+<table >
+	<th>Song Title</th>
+	<th>Artist</th>
+    <th>genre</th>
+    <th>average_rating</th>
+    <th>Album ID </th>
+
+{% for line in result %}
+	<tr>
+		<td><a href="{{url_for('song_bp.get_song_detail', songID = line.songID)}}">{{line.title}}</a></td>
+		<td>{{line.artist if line.artist else ""}}</td>
+        <td>{{line.genre if line.genre else ""}}</td>
+        <td>{{line.avg_rating if line.avg_rating else ""}}</td>
+        <td>{{line.albumID if line.albumID else ""}}</td>
+	</tr>
+{% endfor %}
+</table>
+</body>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+</html>
