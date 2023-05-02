@@ -5,13 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <button onclick="history.back()">Go Back</button>
     <a href="/">Home</a>
     <h2>user details:</h2>
 
 <table>
     <tr>
-        <th>username</th>
+        <th>Username</th>
         <td>{{user_detail.username}}</td>
     </tr>
     <tr>
@@ -22,21 +22,31 @@
         <th>User Last Name</th>
         <td>{{user_detail.lname}}</td>
     </tr>
+    <tr>
+        <th>User Nickname</th>
+        <td>{{user_detail.nickname if user_detail.nickname else "" }}</td>
+    </tr>
 
 
 
     {% if user and user.username != user_detail.username %}
         <tr>
             <th>Friend Status</th>
-            <td>{{ user.friend_status }}</td>
+            <td>
+                {{ user.friend_status }}
+            </td>
         </tr>
         <tr>
-            <th>Follower</th>
-            <td>{{ user.follower_status }}</td>
+            <th>This user is your follower</th>
+            <td>
+            {{ user.follower_status }}
+            </td>
         </tr>
         <tr>
-            <th>Follows</th>
-            <td>{{ user.follows_status }}</td>
+            <th>You are following this user</th>
+            <td>
+                {{ user.follows_status }}
+            </td>
         </tr>
 
 </table>
@@ -48,9 +58,6 @@
         <input type="hidden" name="receiver" value="{{ user_detail.username }}"/>
         <input type="submit" value= request />
     </form>
-    {% if request_info %}
-		<p class="request_info"> {{request_info}}</p>
-	{% endif %}
 {% endif %}
 {% if user.follows_status == False %}
     <form action="/followRequest" method="POST">
@@ -67,10 +74,13 @@
         <input type="submit" value= unfollow />
     </form>
 {% endif %}
+    {% if info %}
+		<p class="request_info"> {{info}}</p>
+	{% endif %}
 {% endif %}
 
 {% if not user %}
-    <h3>Log in and follow this user or become a friend !</h3>
+    <h3>Log in and follow this user or become friends !</h3>
 {% endif %}
 </body>
 

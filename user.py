@@ -34,9 +34,11 @@ def loginAuth():
     cursor.execute(query, username)
     # stores the results in a variable
     user = cursor.fetchone()
+    print(user)
     # use fetchall() if you are expecting more than 1 data row
     error = None
     if (user):
+        print(user)
         PasswordBytes = password.encode('utf-8')
         hashedPassword = user['pwd'].encode('utf-8')
         matches = bcrypt.checkpw(PasswordBytes, hashedPassword)
@@ -44,16 +46,18 @@ def loginAuth():
             # creates a session for the user
             # session is a built-in
             # update the lastlogin date
-            # now = datetime.date.today()
-            # updateStatement = 'UPDATE user set lastlogin = %s where username=%s'
-            # cursor.execute(updateStatement, (now, username))
-            # conn.commit()
+            now = datetime.date.today()
+            updateStatement = 'UPDATE user set lastlogin = %s where username=%s'
+            cursor.execute(updateStatement, (now, username))
+            conn.commit()
 
             # Do not return the password of the user
             user['pwd'] = None
             # session['username'] = username
             session['user'] = user
-            user['lastlogin'] = user['lastlogin'].strftime('%Y-%m-%d')
+            print(user)
+            if user['lastlogin']:
+                user['lastlogin'] = user['lastlogin'].strftime('%Y-%m-%d')
             return redirect(url_for('user_bp.home'))
         else:
             # returns an error message to the html page
@@ -178,7 +182,9 @@ def get_user_detail(username):
             user['follows_status'] = True
         else:
             user['follows_status'] = False
-    return render_template('user/user_detail.html', user_detail=user_detail, user=user)
+
+    info = request.args.get('info')
+    return render_template('user/user_detail.html', user_detail=user_detail, user=user, info=info)
 
 
 @user_bp.route("/friendRequest", methods=['GET', 'POST'])
@@ -198,15 +204,15 @@ def friend_request():
         update_sql = "UPDATE friend SET acceptStatus = 'Pending', updatedAt = %s WHERE user1 = %s AND user2 = %s"
         cursor.execute(update_sql, (now, sender, receiver))
         conn.commit()
-        request_info = "friend request has been updated at " + now.strftime("%Y-%m-%d %H:%M:%S")
+        request_info = "Your friend request has been updated at " + now.strftime("%Y-%m-%d %H:%M:%S")
     else:
         # if not, we insert a new record into the friend table
         insert_sql = "INSERT INTO friend VALUES(%s, %s, %s, %s, %s, %s)"
         cursor.execute(insert_sql, (sender, receiver, "Pending", sender, now, now))
         conn.commit()
-        request_info = "The friend request has been created at " + now.strftime("%Y-%m-%d %H:%M:%S")
+        request_info = "Your friend request has been created at " + now.strftime("%Y-%m-%d %H:%M:%S")
     print(request_info)
-    return redirect(url_for('user_bp.get_user_detail', username=receiver))
+    return redirect(url_for('user_bp.get_user_detail', username=receiver, info=request_info))
 
 
 @user_bp.route("/myFriend/<username>", methods=['GET', 'POST'])
@@ -267,7 +273,8 @@ def follow_request():
         insert_sql = "INSERT INTO follows VALUES(%s, %s, %s)"
         cursor.execute(insert_sql, (sender, receiver, now))
         conn.commit()
-    return redirect(url_for('user_bp.get_user_detail', username=receiver))
+    request_info = "Follow this user successfully "
+    return redirect(url_for('user_bp.get_user_detail', username=receiver, info = request_info))
 
 
 @user_bp.route("/unfollowRequest", methods=['GET', 'POST'])
@@ -278,7 +285,8 @@ def unfollow_request():
     delete_sql = "DELETE FROM follows WHERE follower = %s and follows = %s"
     cursor.execute(delete_sql, (sender, receiver))
     conn.commit()
-    return redirect(url_for('user_bp.get_user_detail', username=receiver))
+    request_info = "Unfollow this user successfully "
+    return redirect(url_for('user_bp.get_user_detail', username=receiver, info=request_info))
 
 
 @user_bp.route("/myFollow/<username>", methods=['GET', 'POST'])
@@ -334,6 +342,8 @@ def get_rating_and_review(username):
 @user_bp.route("/myNewItems/<username>/<lastlogin>", methods=['GET', 'POST'])
 def get_new_item(username, lastlogin):
     result = {}
+    if lastlogin == "None":
+        lastlogin = None
     new_reviews = get_new_reviews(username, lastlogin)
     new_songs = get_new_songs(username, lastlogin)
     result['new_reviews'] = new_reviews

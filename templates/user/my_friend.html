@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <button onclick="history.back()">Go Back</button>
     <a href="/">Home</a>
     <h2>Your friends:</h2>
     <table>
@@ -52,7 +52,7 @@
         {% for line in result.request_receive %}
             <tr>
                 <td>
-                {% if line.acceptStatus == "pending" %}
+                {% if line.acceptStatus == "Pending" %}
                         <a href="{{url_for('user_bp.accept_request', sender = line.user1, receiver = line.user2)}}">Accept</a>
                         <a href="{{url_for('user_bp.reject_request', sender = line.user1, receiver = line.user2)}}">Reject</a>
                 {% endif %}

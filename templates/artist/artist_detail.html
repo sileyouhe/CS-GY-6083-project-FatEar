@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <a href='#' onClick='javascript :history.back(-1);'>Go back</a>
+    <button onclick="history.back()">Go Back</button>
     <a href="/">Home</a>
     <h2>Artist details:</h2>
 
@@ -29,7 +29,7 @@
 
     {% if user %}
     <tr>
-        <th>Fan Status</th>
+        <th>You are a fan of this user</th>
         <td>{{ user.fan_status }}</td>
     </tr>
     {% endif %}

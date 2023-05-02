@@ -28,16 +28,12 @@ git clone https://github.com/sileyouhe/CS-GY-6083-project-FatEar.git
 ```python
 pip install -r requirements.txt 
 ```
-3. Import database from fatear.sql:
+3. Import data from fatear.sql 
 
-4. Run flask app using command:
-```shell
-flask run
-```
-
-### Database Configuration
+4. database configuration
 ```python
-# config.py
+# config.py 
+# default database configuration
 SECRET_KEY = "secret key"
 HOST = 'localhost'
 PORT = 3306
@@ -47,6 +43,11 @@ DBNAME = 'fatear'
 CHARSET = 'utf8mb4'
 CURSORCLASS = pymysql.cursors.DictCursor
 
+```
+
+5. Run flask app using command:
+```shell 
+$ flask --app app.py run
 ```
 
 <!-- Authors -->
