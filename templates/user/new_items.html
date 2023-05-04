@@ -8,7 +8,7 @@
     <button onclick="history.back()">Go Back</button>
     <a href="/">Home</a>
     <h1>Your last login in {{lastlogin}} </h1>
-    <h2>new reviews posted by friends or followers:</h2>
+    <h2>new song reviews posted by friends or followers:</h2>
         <table>
             <tr>
                 <th>Username</th>
@@ -16,10 +16,27 @@
                 <th>Review Text</th>
                 <th>review Date</th>
             </tr>
-            {% for line in result.new_reviews %}
+            {% for line in result.new_reviews.review_song %}
                 <tr>
                     <td><a href="{{url_for('user_bp.get_user_detail', username = line.username)}}">{{line.username}}</a></td>
                     <td><a href="{{ url_for('song_bp.get_song_detail', songID = line.songID) }}">{{ line.title }}</a></td>
+                    <td>{{ line.reviewText }}</td>
+                    <td>{{ line.reviewDate }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h2>new album reviews posted by friends or followers:</h2>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Album ID</th>
+                <th>Review Text</th>
+                <th>review Date</th>
+            </tr>
+            {% for line in result.new_reviews.review_album %}
+                <tr>
+                    <td><a href="{{url_for('user_bp.get_user_detail', username = line.username)}}">{{line.username}}</a></td>
+                    <td>{{ line.albumID }}</td>
                     <td>{{ line.reviewText }}</td>
                     <td>{{ line.reviewDate }}</td>
                 </tr>

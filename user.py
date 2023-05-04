@@ -223,6 +223,7 @@ def get_friend(username):
     friend_sql = "SELECT user2 as user FROM friend WHERE user1 = %s AND acceptStatus = 'accepted' UNION SELECT user1 as user FROM friend WHERE user2 = %s AND acceptStatus = 'accepted'"
     cursor.execute(friend_sql, (username, username))
     friends = cursor.fetchall()
+    # assume that user1 always be the sender and user2 always be the receiver
 
     # get all friend requests of this user has sent
     request_send_sql = "SELECT * FROM friend WHERE user1 = %s ORDER BY friend.updatedAt DESC"
@@ -348,17 +349,29 @@ def get_new_item(username, lastlogin):
     new_songs = get_new_songs(username, lastlogin)
     result['new_reviews'] = new_reviews
     result['new_songs'] = new_songs
+    print(result)
     return render_template('user/new_items.html', result=result, lastlogin= lastlogin)
 
 
 def get_new_reviews(username, lastlogin):
+    result = {}
     cursor = conn.cursor()
+    # review song
     query = 'SELECT * FROM reviewsong NATURAL JOIN song WHERE reviewDate > %s AND username in ' \
             '(SELECT follows as user from follows WHERE follower = %s' \
             ' UNION SELECT user2 as user FROM friend WHERE user1 = %s and acceptStatus = "accepted" ' \
             ' UNION SELECT user1 as user FROM friend WHERE user2 = %s and acceptStatus = "accepted")'
     cursor.execute(query, (lastlogin, username, username, username))
-    result = cursor.fetchall()
+    review_song = cursor.fetchall()
+    result['review_song'] = review_song
+    # review album
+    query = 'SELECT * FROM reviewalbum WHERE reviewDate > %s AND username in ' \
+            '(SELECT follows as user from follows WHERE follower = %s' \
+            ' UNION SELECT user2 as user FROM friend WHERE user1 = %s and acceptStatus = "accepted" ' \
+            ' UNION SELECT user1 as user FROM friend WHERE user2 = %s and acceptStatus = "accepted")'
+    cursor.execute(query, (lastlogin, username, username, username))
+    review_album = cursor.fetchall()
+    result['review_album'] = review_album
     cursor.close()
     return result
 
