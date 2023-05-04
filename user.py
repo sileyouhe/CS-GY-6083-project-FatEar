@@ -162,7 +162,7 @@ def get_user_detail(username):
         if friend_status_1:
             if friend_status_1['acceptStatus'] == "Accepted":
                 user['friend_status'] = True
-        elif friend_status_2:
+        if friend_status_2:
             if friend_status_2['acceptStatus'] == "Accepted":
                 user['friend_status'] = True
 
@@ -192,8 +192,8 @@ def friend_request():
     sender = request.form['sender']
     receiver = request.form['receiver']
     cursor = conn.cursor()
-    friend_sql = "SELECT * FROM friend WHERE user1 = %s AND user2 = %s "
-    cursor.execute(friend_sql, (sender, receiver))
+    friend_sql = "SELECT * FROM friend WHERE requestSentBy = %s AND (user1 = %s OR user2 = %s) "
+    cursor.execute(friend_sql, (sender, receiver, receiver))
     friend_status = cursor.fetchone()
 
     now = datetime.datetime.now()
@@ -201,8 +201,8 @@ def friend_request():
     # check if there is a record in the friend table
     if friend_status:
         # if so, we update the status and update timestamp
-        update_sql = "UPDATE friend SET acceptStatus = 'Pending', updatedAt = %s WHERE user1 = %s AND user2 = %s"
-        cursor.execute(update_sql, (now, sender, receiver))
+        update_sql = "UPDATE friend SET acceptStatus = 'Pending', updatedAt = %s WHERE requestSentBy = %s AND (user1 = %s OR user2 = %s) "
+        cursor.execute(update_sql, (now, sender, receiver, receiver))
         conn.commit()
         request_info = "Your friend request has been updated at " + now.strftime("%Y-%m-%d %H:%M:%S")
     else:
@@ -223,16 +223,15 @@ def get_friend(username):
     friend_sql = "SELECT user2 as user FROM friend WHERE user1 = %s AND acceptStatus = 'accepted' UNION SELECT user1 as user FROM friend WHERE user2 = %s AND acceptStatus = 'accepted'"
     cursor.execute(friend_sql, (username, username))
     friends = cursor.fetchall()
-    # assume that user1 always be the sender and user2 always be the receiver
 
     # get all friend requests of this user has sent
-    request_send_sql = "SELECT * FROM friend WHERE user1 = %s ORDER BY friend.updatedAt DESC"
+    request_send_sql = "SELECT * FROM friend  WHERE requestSentBy = %s ORDER BY friend.updatedAt DESC"
     cursor.execute(request_send_sql, username)
     request_send = cursor.fetchall()
 
     # get all friend requests of this user has received
-    receive_receive_sql = "SELECT * FROM friend WHERE user2 = %s ORDER BY friend.updatedAt DESC "
-    cursor.execute(receive_receive_sql, username)
+    request_receive_sql = "SELECT * FROM friend WHERE (user1 = %s OR user2 = %s) AND requestSentBy != %s ORDER BY friend.updatedAt DESC "
+    cursor.execute(request_receive_sql, (username, username, username))
     request_receive = cursor.fetchall()
 
     result['friends'] = friends
@@ -245,8 +244,8 @@ def get_friend(username):
 def accept_request(sender, receiver):
     cursor = conn.cursor()
     now = datetime.datetime.now()
-    update_sql = "UPDATE friend SET acceptStatus = 'Accepted', updatedAt = %s WHERE user1 = %s AND user2 = %s"
-    cursor.execute(update_sql, (now, sender, receiver))
+    update_sql = "UPDATE friend SET acceptStatus = 'Accepted', updatedAt = %s WHERE requestSentBy = %s AND (user1 = %s OR user2 = %s) "
+    cursor.execute(update_sql, (now, sender, receiver, receiver))
     conn.commit()
     return redirect(url_for('user_bp.get_friend', username=receiver))
 
@@ -255,8 +254,8 @@ def accept_request(sender, receiver):
 def reject_request(sender, receiver):
     cursor = conn.cursor()
     now = datetime.datetime.now()
-    update_sql = "UPDATE friend SET acceptStatus = 'Not accepted', updatedAt = %s WHERE user1 = %s AND user2 = %s"
-    cursor.execute(update_sql, (now, sender, receiver))
+    update_sql = "UPDATE friend SET acceptStatus = 'Not accepted', updatedAt = %s WHERE requestSentBy = %s AND (user1 = %s OR user2 = %s) "
+    cursor.execute(update_sql, (now, sender, receiver, receiver))
     conn.commit()
     return redirect(url_for('user_bp.get_friend', username=receiver))
 
